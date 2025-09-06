@@ -5,6 +5,9 @@ const { token } = require('./config.json');
 const fs = require('node:fs');
 const path = require('node:path');
 
+const pikachu = require('./commands/fun/pikachu');
+const testKeyword = require('./services/artService');
+
 // 2. 클라이언트 객체 생성 (Guilds관련, 메시지관련 인텐트 추가)
 const client = new Client({ intents: [
     GatewayIntentBits.Guilds, 
@@ -15,31 +18,34 @@ const client = new Client({ intents: [
 client.commands = new Collection();
 
 const foldersPath = path.join(__dirname, 'commands');
-const commandFolders = fs.readdirSync(foldersPath);
-
-for (const folder of commandFolders) {
-    const commandsPath = path.join(foldersPath, folder);
-    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-    for (const file of commandFiles) {
-        const filePath = path.join(commandsPath, file);
-        const command = require(filePath);
-        // Set a new item in the collection with the key as the command name and the value as the exported module
-        if ('data' in command && 'execute' in command) {
-            client.commands.set(command.data.name, command);
-        } else {
-            console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
-        }
+const commandsPath = path.join(foldersPath, 'utility');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+    const filePath = path.join(commandsPath, file);
+    const command = require(filePath);
+    // Set a new item in the collection with the key as the command name and the value as the exported module
+    if ('data' in command && 'execute' in command) {
+        client.commands.set(command.data.name, command);
+    } else {
+        console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
     }
 }
 
+
 // 3. 봇이 준비됐을때 한번만(once) 표시할 메시지
 client.once(Events.ClientReady, readyClient => {
-console.log(`Ready! Logged in as ${readyClient.user.tag}`);
-console.log(client.commands);
+    console.log(`Ready! Logged in as ${readyClient.user.tag}`);
+    console.log(client.commands);
+    testKeyword();
 });
+
+let pikaNum = 0;
 
 // 4. 누군가 ping을 작성하면 pong으로 답장한다.
 client.on('messageCreate', async message => {
+    // 피카츄 메시지 처리
+    pikaNum = pikachu(message, pikaNum);
+
     if (message.author.bot) return;
     console.log(message.content);    
     const command = client.commands.get(message.content.split(' ')[0]);
