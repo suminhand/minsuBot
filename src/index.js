@@ -1,11 +1,12 @@
 // 1. 주요 클래스 가져오기
 const { Client, Collection, Events, GatewayIntentBits, MessageFlags } = require('discord.js');
-const { token } = require('./config.json');
+const { token } = require('../config.json');
 
 const fs = require('node:fs');
 const path = require('node:path');
 
 const pikachu = require('./commands/fun/pikachu');
+const seedKeywords = require('../script/seedKeywords');
 const testKeyword = require('./services/artService');
 
 // 2. 클라이언트 객체 생성 (Guilds관련, 메시지관련 인텐트 추가)
@@ -36,6 +37,9 @@ for (const file of commandFiles) {
 client.once(Events.ClientReady, readyClient => {
     console.log(`Ready! Logged in as ${readyClient.user.tag}`);
     console.log(client.commands);
+
+    // 기본 데이터 추가
+    seedKeywords();
     testKeyword();
 });
 
