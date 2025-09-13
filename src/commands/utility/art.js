@@ -29,15 +29,16 @@ module.exports = {
             },
         ],
     },
-    async execute(message) {
-        switch (message[0]) {
+    async execute(message, args) {
+        switch (args[0]) {
             case 'help':
                 await message.reply('아직 옵션으로 추천만 가능합니다.');
                 break;
             case 'recommend':
             case '추천':
                 const keyword = await getKeyword(3);
-                await message.reply('추천된 키워드입니다.');
+                await message.reply('추천된 키워드입니다.' + keyword);
+                break;
         }
     },
 };
