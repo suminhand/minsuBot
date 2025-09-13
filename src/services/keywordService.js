@@ -1,4 +1,5 @@
 const db = require('./firestore');
+const { query, where, orderBy, limit, getDocs } = require('firebase/firestore');
 const createRandomKey = require('../../utils/createRandomKey');
 
 async function addKeyword(keyword) {
@@ -27,14 +28,14 @@ async function getKeyword(num) {
 
     const randomPoint = Math.random() * 1000000;
 
-    const query = query(
+    const getQuery = query(
         keywordCollection,
         where("randomA", ">=", randomPoint),
         orderBy("randomA"),
         limit(num)
     )
     
-    const querySnapshot = await getDocs(query);
+    const querySnapshot = await getDocs(getQuery);
     let keywords = querySnapshot.docs;
 
     const result = keywords.map(doc => ({ id: doc.id, ...doc.data() }));
