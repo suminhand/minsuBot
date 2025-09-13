@@ -1,7 +1,7 @@
 const db = require('./firestore');
 
 async function testKeyword() {
-    console.log('testKeyword');
+    console.log('Keyword print test');
 
     // 데이터 쓰기
     

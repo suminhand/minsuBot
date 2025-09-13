@@ -1,5 +1,6 @@
 const db = require('../src/services/firestore');
 const defaultKeywords = require('../data/defaultKewords.js');
+const createRandomKey = require('../utils/createRandomKey');
 
 async function seedKeywords() {
     try {
@@ -25,7 +26,13 @@ async function seedKeywords() {
                     id: docRef.id,
                     name: keyword.name,
                     category: keyword.category,
-                    location: keyword.location
+                    location: keyword.location,
+                    randomA: createRandomKey(),
+                    randomB: createRandomKey(),
+                    randomC: createRandomKey(),
+                    randomD: createRandomKey(),
+                    randomE: createRandomKey(),
+                    randomF: createRandomKey(),
                 });
             }
 
