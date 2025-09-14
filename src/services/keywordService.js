@@ -21,24 +21,17 @@ async function addKeyword(keyword) {
 }
 
 async function getKeyword(num) {
-    const randomA = Math.floor(Math.random() * 6);
-    const keywordCollection = db.collection('keywords');
-    
-    const randomFieldIndex = Math.floor(Math.random() * 6);
-
     const randomPoint = Math.random() * 1000000;
 
-    const getQuery = query(
-        keywordCollection,
-        where("randomA", ">=", randomPoint),
-        orderBy("randomA"),
-        limit(num)
-    )
-    
-    const querySnapshot = await getDocs(getQuery);
-    let keywords = querySnapshot.docs;
+    const keywordsRef = db.collection('keywords');
+    const snapshot = await keywordsRef.where('randomA', '>=', randomPoint).orderBy('randomA').limit(num).get();
+    if (snapshot.size < num) {
+        const missing = num - snapshot.size;
+        const missingSnapshot = await keywordsRef.where('randomA', '<', randomPoint).orderBy('randomA').limit(missing).get();
+        snapshot.docs.push(...missingSnapshot.docs);
+    }
 
-    const result = keywords.map(doc => ({ id: doc.id, ...doc.data() }));
+    const result = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
     console.log(`${result} Keyword retrieved successfully`);
     return result;
