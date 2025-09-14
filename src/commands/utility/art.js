@@ -37,7 +37,7 @@ module.exports = {
             case 'recommend':
             case '추천':
                 const keyword = await getKeyword(3);
-                await message.reply('추천된 키워드입니다.' + keyword);
+                await message.reply('추천된 키워드입니다.' + keyword.map(k => k.name).join(', '));
                 break;
         }
     },
