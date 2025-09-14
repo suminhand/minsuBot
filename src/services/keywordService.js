@@ -33,7 +33,7 @@ async function getKeyword(num) {
 
     const result = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-    console.log(`${result} Keyword retrieved successfully`);
+    console.log(`${result.length} Keywords retrieved successfully`);
     return result;
 }
 
