@@ -6,8 +6,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const pikachu = require('./commands/fun/pikachu');
-const seedKeywords = require('../script/seedKeywords');
-const testKeyword = require('./services/artService');
+const conn = require('./config/connection');
 
 // 2. 클라이언트 객체 생성 (Guilds관련, 메시지관련 인텐트 추가)
 const client = new Client({ intents: [
@@ -38,9 +37,15 @@ client.once(Events.ClientReady, readyClient => {
     console.log(`Ready! Logged in as ${readyClient.user.tag}`);
     console.log(client.commands);
 
-    // 기본 데이터 추가
-    seedKeywords();
-    testKeyword();
+    // db 연결확인
+    try {
+        const connCheck = conn.getConnection();
+        console.log('DB Connection established');
+    } catch (error) {
+        console.error('DB Connection failed');
+        console.error(error);
+        process.exit(1);
+    }
 });
 
 let pikaNum = 0;
@@ -53,7 +58,6 @@ client.on('messageCreate', async message => {
     if (message.author.bot) return;
     console.log(message.content);    
     const command = client.commands.get(message.content.split(' ')[0]);
-    console.log(command);
     if (!command) return;
 
     const args = message.content.split(' ').slice(1);

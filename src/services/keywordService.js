@@ -1,40 +1,19 @@
-const db = require('./firestore');
-const { query, where, orderBy, limit, getDocs } = require('firebase/firestore');
-const createRandomKey = require('../../utils/createRandomKey');
+const conn = require('../config/connection');
 
-async function addKeyword(keyword) {
-    const keywordCollection = db.collection('keywords');
-    const docRef = keywordCollection.doc();
-    await docRef.set(docRef, {
-        id: docRef.id,
-        name: keyword.name,
-        category: keyword.category,
-        location: keyword.location,
-        randomA: createRandomKey(),
-        randomB: createRandomKey(),
-        randomC: createRandomKey(),
-        randomD: createRandomKey(),
-        randomE: createRandomKey(),
-        randomF: createRandomKey(),
-    });
-    console.log(`${keyword.name} Keyword added successfully`);
+// 키워드 가져오기
+async function getAllKeyword() {
+    const [keywords] = await conn.execute('SELECT * FROM keyword');
+    console.log(keywords);
+    console.log(`${keywords.length} Keywords retrieved successfully`);
+    return keywords;
 }
 
 async function getKeyword(num) {
-    const randomPoint = Math.random() * 1000000;
-
-    const keywordsRef = db.collection('keywords');
-    const snapshot = await keywordsRef.where('randomA', '>=', randomPoint).orderBy('randomA').limit(num).get();
-    if (snapshot.size < num) {
-        const missing = num - snapshot.size;
-        const missingSnapshot = await keywordsRef.where('randomA', '<', randomPoint).orderBy('randomA').limit(missing).get();
-        snapshot.docs.push(...missingSnapshot.docs);
-    }
-
-    const result = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-    console.log(`${result.length} Keywords retrieved successfully`);
-    return result;
+    console.log(num, typeof num);
+    const [keywords] = await conn.execute(`SELECT * FROM keyword ORDER BY RAND() LIMIT ${num}`);
+    console.log(keywords);
+    console.log(`${keywords.length} Keywords retrieved successfully`);
+    return keywords;
 }
 
-module.exports = { addKeyword, getKeyword };
+module.exports = { getAllKeyword, getKeyword };

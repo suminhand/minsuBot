@@ -1,4 +1,4 @@
-const db = require('./firestore');
+/*const db = require('./firestore');
 
 async function testKeyword() {
     console.log('Keyword print test');
@@ -13,4 +13,4 @@ async function testKeyword() {
     });
 }
 
-module.exports = testKeyword;
+module.exports = testKeyword;*/

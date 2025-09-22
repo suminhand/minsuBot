@@ -1,6 +1,6 @@
-const db = require('../src/services/firestore');
+/*const db = require('../src/services/firestore');
 const defaultKeywords = require('../data/defaultKewords.js');
-const createRandomKey = require('../utils/createRandomKey');
+const createRandomKey = require('../src/utils/createRandomKey.js');
 
 async function seedKeywords() {
     try {
@@ -30,9 +30,6 @@ async function seedKeywords() {
                     randomA: createRandomKey(),
                     randomB: createRandomKey(),
                     randomC: createRandomKey(),
-                    randomD: createRandomKey(),
-                    randomE: createRandomKey(),
-                    randomF: createRandomKey(),
                 });
             }
 
@@ -50,4 +47,4 @@ async function seedKeywords() {
     
 }
 
-module.exports = seedKeywords;
+module.exports = seedKeywords;*/
